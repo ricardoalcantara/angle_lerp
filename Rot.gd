@@ -11,7 +11,7 @@ func _process(delta) -> void:
 	update()
 	puppet_rotation = _mirror.rotation
 	
-	var rot = lerp_angle(rotation, puppet_rotation, 0.2)
+	var rot = lerp_angle(rotation, puppet_rotation, 0.2, true)
 	rotation = rot
 
 
@@ -20,13 +20,18 @@ func _draw():
 	draw_line(Vector2(), Vector2.DOWN.rotated(puppet_rotation) * 100, Color.red)
 
 
-func lerp_angle(a: float, b: float, t: float) -> float:
-    if abs(a-b) >= PI:
-        if a > b:
-            a = normalize_angle(a) - 2.0 * PI
-        else:
-            b = normalize_angle(b) - 2.0 * PI
-    return lerp(a, b, t)
+func lerp_angle(a: float, b: float, t: float, reset_rotation: bool = false) -> float:
+	if reset_rotation:
+		if a > 2 * PI:
+			a = 2 * PI - a
+		if a < -2 * PI:
+			a = 2 * PI + a
+	if abs(a-b) >= PI:
+	    if a > b:
+	        a = normalize_angle(a) - 2.0 * PI
+	    else:
+	        b = normalize_angle(b) - 2.0 * PI
+	return lerp(a, b, t)
 
 
 func normalize_angle(x: float)  -> float:
